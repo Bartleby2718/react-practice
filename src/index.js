@@ -21,25 +21,17 @@ class Board extends React.Component {
   }
 
   render() {
-    return (
-      <div>
-        <div className="board-row">
-          {this.renderSquare(0)}
-          {this.renderSquare(1)}
-          {this.renderSquare(2)}
-        </div>
-        <div className="board-row">
-          {this.renderSquare(3)}
-          {this.renderSquare(4)}
-          {this.renderSquare(5)}
-        </div>
-        <div className="board-row">
-          {this.renderSquare(6)}
-          {this.renderSquare(7)}
-          {this.renderSquare(8)}
-        </div>
-      </div>
-    );
+    let rows = [];
+    for (let i = 0; i < 3; i++) {
+      let cells = [];
+      for (let j = 0; j < 3; j++) {
+        let cell = this.renderSquare(3 * i + j);
+        cells.push(cell);
+      }
+      let row = <div className="board-row">{cells}</div>;
+      rows.push(row);
+    }
+    return <div>{rows}</div>;
   }
 }
 
@@ -160,7 +152,6 @@ function calculateWinner(squares) {
 }
 
 // Potential improvements listed in order of increasing difficulty:
-// TODO: 3. Rewrite Board to use two loops to make the squares instead of hardcoding them.
 // TODO: 4. Add a toggle button that lets you sort the moves in either ascending or descending order.
 // TODO: 5. When someone wins, highlight the three squares that caused the win.
 // TODO: 6. When no one wins, display a message about the result being a draw.
