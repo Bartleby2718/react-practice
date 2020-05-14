@@ -47,7 +47,13 @@ class Game extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      history: [{ squares: Array(9).fill(null) }],
+      history: [
+        {
+          squares: Array(9).fill(null),
+          row: null,
+          column: null,
+        },
+      ],
       stepNumber: 0,
       xIsNext: true,
     };
@@ -66,6 +72,8 @@ class Game extends React.Component {
       history: history.concat([
         {
           squares: squares,
+          row: Math.floor(i / 3), // zero-based
+          column: i % 3, // zero-based
         },
       ]),
       stepNumber: history.length,
@@ -86,10 +94,15 @@ class Game extends React.Component {
     const winner = calculateWinner(current.squares);
 
     const moves = history.map((step, move) => {
+      const coordinates =
+        move === 0
+          ? ""
+          : `(${history[move].row + 1}, ${history[move].column + 1})`;
       const desc = move ? "Go to move #" + move : "Go to game start";
       return (
         // Keys only need to be unique between components and their siblings
         <li key={move}>
+          {coordinates}
           <button onClick={() => this.jumpTo(move)}>{desc}</button>
         </li>
       );
@@ -144,7 +157,6 @@ function calculateWinner(squares) {
 }
 
 // Potential improvements listed in order of increasing difficulty:
-// TODO: 1. Display the location for each move in the format (col, row) in the move history list.
 // TODO: 2. Bold the currently selected item in the move list.
 // TODO: 3. Rewrite Board to use two loops to make the squares instead of hardcoding them.
 // TODO: 4. Add a toggle button that lets you sort the moves in either ascending or descending order.
