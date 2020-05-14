@@ -4,18 +4,23 @@ import "./index.css";
 
 function Square(props) {
   return (
-    <button className="square" onClick={props.onClick}>
+    <button
+      className="square"
+      onClick={props.onClick}
+      style={{ backgroundColor: props.backgroundColor }}
+    >
       {props.value}
     </button>
   );
 }
 
 class Board extends React.Component {
-  renderSquare(i) {
+  renderSquare(i, backgroundColor) {
     return (
       <Square
         value={this.props.squares[i]}
         onClick={() => this.props.onClick(i)}
+        backgroundColor={backgroundColor}
       />
     );
   }
@@ -25,7 +30,9 @@ class Board extends React.Component {
     for (let i = 0; i < 3; i++) {
       let cells = [];
       for (let j = 0; j < 3; j++) {
-        let cell = this.renderSquare(3 * i + j);
+        let index = 3 * i + j;
+        let color = this.props.highlighted.includes(index) ? "yellow" : "";
+        let cell = this.renderSquare(3 * i + j, color);
         cells.push(cell);
       }
       let row = <div className="board-row">{cells}</div>;
@@ -56,7 +63,8 @@ class Game extends React.Component {
     const history = this.state.history.slice(0, this.state.stepNumber + 1);
     const current = history[history.length - 1];
     const squares = current.squares.slice();
-    if (calculateWinner(squares) || squares[i]) {
+    let first = getThreeSquares(squares)[0];
+    if (Number.isInteger(first) || squares[i]) {
       return;
     }
     squares[i] = this.state.xIsNext ? "X" : "O";
@@ -90,7 +98,8 @@ class Game extends React.Component {
   render() {
     const history = this.state.history;
     const current = history[this.state.stepNumber];
-    const winner = calculateWinner(current.squares);
+    const [first, second, third] = getThreeSquares(current.squares);
+    const winner = current.squares[first];
 
     const moves = history.map((step, move) => {
       const coordinates =
@@ -124,6 +133,7 @@ class Game extends React.Component {
           <Board
             squares={current.squares}
             onClick={(i) => this.handleClick(i)}
+            highlighted={[first, second, third]}
           />
         </div>
         <div className="game-info">
@@ -146,7 +156,7 @@ class Game extends React.Component {
 
 ReactDOM.render(<Game />, document.getElementById("root"));
 
-function calculateWinner(squares) {
+function getThreeSquares(squares) {
   const lines = [
     [0, 1, 2],
     [3, 4, 5],
@@ -160,12 +170,11 @@ function calculateWinner(squares) {
   for (let i = 0; i < lines.length; i++) {
     const [a, b, c] = lines[i];
     if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
-      return squares[a];
+      return [a, b, c];
     }
   }
-  return null;
+  return [null, null, null];
 }
 
 // Potential improvements listed in order of increasing difficulty:
-// TODO: 5. When someone wins, highlight the three squares that caused the win.
 // TODO: 6. When no one wins, display a message about the result being a draw.
