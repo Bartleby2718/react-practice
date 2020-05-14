@@ -48,6 +48,7 @@ class Game extends React.Component {
       ],
       stepNumber: 0,
       xIsNext: true,
+      isAscending: true,
     };
   }
 
@@ -77,6 +78,12 @@ class Game extends React.Component {
     this.setState({
       stepNumber: step,
       xIsNext: step % 2 == 0,
+    });
+  }
+
+  toggleSortingOrder(e) {
+    this.setState({
+      isAscending: !this.state.isAscending,
     });
   }
 
@@ -110,6 +117,7 @@ class Game extends React.Component {
       status = "Next player: " + (this.state.xIsNext ? "X" : "O");
     }
 
+    let isAscending = this.state.isAscending;
     return (
       <div className="game">
         <div className="game-board">
@@ -120,7 +128,14 @@ class Game extends React.Component {
         </div>
         <div className="game-info">
           <div>{status}</div>
-          <ol>{moves}</ol>
+          <button
+            onClick={(e) => {
+              this.toggleSortingOrder();
+            }}
+          >
+            Sort in {isAscending ? "de" : "a"}scending order
+          </button>
+          <ol>{isAscending ? moves : moves.reverse()}</ol>
         </div>
       </div>
     );
@@ -152,6 +167,5 @@ function calculateWinner(squares) {
 }
 
 // Potential improvements listed in order of increasing difficulty:
-// TODO: 4. Add a toggle button that lets you sort the moves in either ascending or descending order.
 // TODO: 5. When someone wins, highlight the three squares that caused the win.
 // TODO: 6. When no one wins, display a message about the result being a draw.
