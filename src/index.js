@@ -18,6 +18,7 @@ class Board extends React.Component {
   renderSquare(i, backgroundColor) {
     return (
       <Square
+        key={i}
         value={this.props.squares[i]}
         onClick={() => this.props.onClick(i)}
         backgroundColor={backgroundColor}
@@ -35,7 +36,11 @@ class Board extends React.Component {
         let cell = this.renderSquare(3 * i + j, color);
         cells.push(cell);
       }
-      let row = <div className="board-row">{cells}</div>;
+      let row = (
+        <div className="board-row" key={i}>
+          {cells}
+        </div>
+      );
       rows.push(row);
     }
     return <div>{rows}</div>;
