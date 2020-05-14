@@ -99,9 +99,12 @@ class Game extends React.Component {
           ? ""
           : `(${history[move].row + 1}, ${history[move].column + 1})`;
       const desc = move ? "Go to move #" + move : "Go to game start";
+      const additionalStyle = {
+        fontWeight: move === this.state.stepNumber ? "bold" : "",
+      };
       return (
         // Keys only need to be unique between components and their siblings
-        <li key={move}>
+        <li key={move} style={additionalStyle}>
           {coordinates}
           <button onClick={() => this.jumpTo(move)}>{desc}</button>
         </li>
@@ -157,7 +160,6 @@ function calculateWinner(squares) {
 }
 
 // Potential improvements listed in order of increasing difficulty:
-// TODO: 2. Bold the currently selected item in the move list.
 // TODO: 3. Rewrite Board to use two loops to make the squares instead of hardcoding them.
 // TODO: 4. Add a toggle button that lets you sort the moves in either ascending or descending order.
 // TODO: 5. When someone wins, highlight the three squares that caused the win.
