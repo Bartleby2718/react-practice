@@ -122,6 +122,8 @@ class Game extends React.Component {
     let status;
     if (winner) {
       status = "Winner: " + winner;
+    } else if (history.length === 10) {
+      status = "The game ended in a draw.";
     } else {
       status = "Next player: " + (this.state.xIsNext ? "X" : "O");
     }
@@ -175,6 +177,3 @@ function getThreeSquares(squares) {
   }
   return [null, null, null];
 }
-
-// Potential improvements listed in order of increasing difficulty:
-// TODO: 6. When no one wins, display a message about the result being a draw.
